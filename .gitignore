@@ -111,4 +111,11 @@ proj.win32/*.opensdf
 proj.win32/Debug.*/
 proj.win32/Release.*/
 
+# CMake
+*CMakeCache.txt
+*CMakeFiles/
+*cmake_install.cmake
+*Makefile
+lib/
+
 # others
