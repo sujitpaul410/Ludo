@@ -1,7 +1,8 @@
 #include "MainMenu.h"
-#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
+
+#define audioInstance cocos2d::experimental::AudioEngine
 
 Scene* MainMenu::createScene()
 {
@@ -29,35 +30,42 @@ bool MainMenu::init()
 
     //MenuItems
     auto closeItem = MenuItemImage::create(
-                                           "CloseNormal.png",
-                                           "CloseSelected.png",
+                                           "ui/exit.png",
+                                           "ui/exit_pressed.png",
                                            CC_CALLBACK_1(MainMenu::menuCloseCallback, this));
 
-    if (closeItem == nullptr ||
-        closeItem->getContentSize().width <= 0 ||
-        closeItem->getContentSize().height <= 0)
+    playItem = MenuItemImage::create(
+        "ui/PLAY.png",
+        "ui/PLAY_pressed.png",
+        CC_CALLBACK_1(MainMenu::menuPlayCallback, this));
+
+
+    volumeItem = MenuItemImage::create(
+        "ui/volume.png",
+        "ui/mute.png",
+        CC_CALLBACK_1(MainMenu::menuVolumeCallback, this));
+
+
+    if (closeItem == nullptr || playItem==nullptr || volumeItem==nullptr)
     {
-        problemLoading("'CloseNormal.png' and 'CloseSelected.png'");
+        problemLoading("UI sprites");
     }
     else
     {
-        float const x = origin.x + visibleSize.width - closeItem->getContentSize().width/2;
-        float const y = origin.y + closeItem->getContentSize().height/2;
-        closeItem->setPosition(Vec2(x,y));
+        // create menu, it's an autorelease object
+        auto menu = Menu::create(closeItem, NULL);
+        menu->setPosition(Vec2(visibleSize.width / 2 + 200, visibleSize.height / 22));
+        this->addChild(menu, 6);
+
+        auto play = Menu::create(playItem, NULL);
+        play->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 22));
+        this->addChild(play, 4, "play");
+
+        auto volume = Menu::create(volumeItem, NULL);
+        volume->setPosition(Vec2(visibleSize.width / 2 - 200, visibleSize.height / 22));
+        this->addChild(volume, 5, "volume");
     }
 
-    // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, NULL);
-    menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1);
-
-    auto playItem = MenuItemImage::create(
-        "PLAY.png",
-        "PLAY_pressed.png",
-        CC_CALLBACK_1(MainMenu::menuPlayCallback, this));
-    auto play = Menu::create(playItem, NULL);
-    play->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height/22));
-    this->addChild(play, 4, "play");
 
     //label
     auto label = Label::createWithTTF(":: Ludo ::", "fonts/Marker Felt.ttf", 35);
@@ -72,16 +80,18 @@ bool MainMenu::init()
                                 origin.y + visibleSize.height - label->getContentSize().height));
 
         // add the label as a child to this layer
-        this->addChild(label, 1);
+        this->addChild(label, 3);
     }
 
     // Background
-    auto sprite = Sprite::create("ludo.jpg");
-    auto diceSprite = Sprite::create("dice_roll.png", Rect(0,370,100,70));
-    auto maskSprite = Sprite::create("mask.png");
-    if (sprite == nullptr)
+    auto sprite = Sprite::create("background/ludo.jpg");
+    auto diceSprite = Sprite::create("dice/dice_roll.png", Rect(0,370,100,70));
+    auto maskSprite = Sprite::create("background/mask.png");
+    auto textBG = Sprite::create("ui/textHolder.png");
+
+    if (sprite == nullptr || diceSprite == nullptr || maskSprite == nullptr || textBG == nullptr)
     {
-        problemLoading("'ludo.jpg'");
+        problemLoading("Background & other UI sprites");
     }
     else
     {
@@ -90,30 +100,73 @@ bool MainMenu::init()
         diceSprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
         maskSprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
         maskSprite->setOpacity(200);
+        textBG->setPosition(Vec2(origin.x + visibleSize.width / 2,
+            origin.y + visibleSize.height - label->getContentSize().height-2));
 
         // add the sprite as a child to this layer
         this->addChild(sprite, 0, "background");
         this->addChild(diceSprite, 1);
         this->addChild(maskSprite, 2, "mask");
+        this->addChild(textBG, 2, "titleTextBG");
 
     }
+
+    //BGM
+    playBGM();
+    
     return true;
 }
 
 
 void MainMenu::menuCloseCallback(Ref* pSender)
 {
+    clickID = audioInstance::play2d("sfx/click.mp3", false, 1.0f);
+
     //Close the cocos2d-x game scene and quit the application
     Director::getInstance()->end();
-
-    /*To navigate back to native iOS screen(if present) without quitting the application  ,do not use Director::getInstance()->end() as given above,instead trigger a custom event created in RootViewController.mm as below*/
-
-    //EventCustom customEndEvent("game_scene_close_event");
-    //_eventDispatcher->dispatchEvent(&customEndEvent);
-
-
 }
 
 void MainMenu::menuPlayCallback(Ref* pSender)
 {
+    clickID = audioInstance::play2d("sfx/click.mp3", false, 1.0f);
+    if (!isPlaying)
+    {
+        playItem->setNormalSpriteFrame(SpriteFrame::create("ui/LOCK.png", Rect(0, 0, 63, 66)));
+        this->getChildByName("mask")->setVisible(false);
+        isPlaying = true;
+    }
+    else
+    {
+        playItem->setNormalSpriteFrame(SpriteFrame::create("ui/PLAY.png", Rect(0, 0, 63, 66)));
+        this->getChildByName("mask")->setVisible(true);
+        isPlaying = false;
+    }
 }
+void MainMenu::menuVolumeCallback(Ref* pSender)
+{
+    clickID = audioInstance::play2d("sfx/click.mp3", false, 1.0f);
+
+    if (!isMuted)
+    {
+        volumeItem->setNormalSpriteFrame(SpriteFrame::create("ui/mute.png", Rect(0, 0, 50, 50)));
+        stopBGM();
+        isMuted = true;
+    }
+    else
+    {
+        volumeItem->setNormalSpriteFrame(SpriteFrame::create("ui/volume.png", Rect(0, 0, 50, 50)));
+        playBGM();
+        isMuted = false;
+    }
+}
+
+void MainMenu::playBGM()
+{
+    bgmID = audioInstance::play2d("sfx/bgm.mp3", true, 0.04f);
+}
+
+void MainMenu::stopBGM()
+{
+    audioInstance::stop(bgmID);
+}
+
