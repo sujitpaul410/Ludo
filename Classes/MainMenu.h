@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "AudioEngine.h"
+#include "Player.h"
 
 class MainMenu : public cocos2d::Scene
 {
@@ -10,17 +11,13 @@ private:
     cocos2d::Vec2 deviceResolution;
     cocos2d::MenuItemImage* volumeItem;
     cocos2d::MenuItemImage* playItem;
+    static cocos2d::Sprite* diceSprite;
     
     bool isMuted;
     bool isPlaying;
     int bgmID;
     int clickID;
 
-public:
-    static cocos2d::Scene* createScene();
-
-    virtual bool init();
-    
     //selector callbacks
     void menuCloseCallback(cocos2d::Ref* pSender);
     void menuPlayCallback(cocos2d::Ref* pSender);
@@ -28,9 +25,38 @@ public:
 
     void playBGM();
     void stopBGM();
-    
+
+    static Player* bluePlayer;
+    static Player* redPlayer;
+    static Player* greenPlayer;
+    static Player* yellowPlayer;
+
+    static Player* currentlyPlaying;
+
+    static cocos2d::ui::Button* playerButton;
+
+    static bool hasMadePlayerPlay;
+
+public:
+    static cocos2d::Scene* createScene();
+
+    virtual bool init();
+        
     // implement the "static create()" method manually
     CREATE_FUNC(MainMenu);
+
+    //Only for Debug
+    //Used for getting positions
+    void onMouseMove(cocos2d::EventMouse* event, Player* player);
+
+    virtual void update(float dt);
+
+    static void hidePlayerButton();
+    static void playRollDiceAnim();
+
+    void makePlayerPlay(Player* _player);
+
+    static void passPlayerTurn();
 };
 
 #endif
