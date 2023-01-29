@@ -7,7 +7,7 @@ Token::Token(int _id, std::string _spritePath)
 {
 	button = cocos2d::ui::Button::create(_spritePath);
 	id = _id;
-	currentPos = -1;
+	currentPos = 0;
 }
 
 cocos2d::ui::Button* Token::getButton()

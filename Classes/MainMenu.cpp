@@ -330,20 +330,8 @@ void MainMenu::update(float dt)
     {
         if (bluePlayer == currentlyPlaying && !hasMadePlayerPlay)
         {
-            //log("Blue Player's playing");
+            log("Blue Player's playing");
             makePlayerPlay(bluePlayer);
-        }
-        else if (redPlayer == currentlyPlaying)
-        {
-            log("Red Player's playing");
-        }
-        else if (greenPlayer == currentlyPlaying)
-        {
-            log("Green Player's playing");
-        }
-        else if (yellowPlayer == currentlyPlaying)
-        {
-            log("Yellow Player's playing");
         }
     }
 }
@@ -375,7 +363,7 @@ void MainMenu::makePlayerPlay(Player* _player)
     playerButton->setTouchEnabled(true);
     playerButton->setVisible(true);
     playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, _player));
-
+    adjustPlayerTokensOpactity(_player);
     hasMadePlayerPlay = true;
 }
 
@@ -387,33 +375,77 @@ void MainMenu::passPlayerTurn()
         playerButton->setPosition(Vec2(playerButton->getPosition().x, 644));
         playerButton->setVisible(true);
         playerButton->setTouchEnabled(true);
+        playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, redPlayer));
+        adjustPlayerTokensOpactity(redPlayer);
         currentlyPlaying = redPlayer;
         return;
     }
     if (currentlyPlaying == redPlayer)
     {
+        log("passed to greenPlayer");
         playerButton->setPosition(Vec2(1015, playerButton->getPosition().y));
         playerButton->setVisible(true);
         playerButton->setTouchEnabled(true);
+        playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, greenPlayer));
+        adjustPlayerTokensOpactity(greenPlayer);
         currentlyPlaying = greenPlayer;
         return;
     }
     if (currentlyPlaying == greenPlayer)
     {
+        log("passed to yellowPlayer");
         playerButton->setPosition(Vec2(playerButton->getPosition().x, 221));
         playerButton->setVisible(true);
         playerButton->setTouchEnabled(true);
+        playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, yellowPlayer));
+        adjustPlayerTokensOpactity(yellowPlayer);
         currentlyPlaying = yellowPlayer;
         return;
     }
     if (currentlyPlaying == yellowPlayer)
     {
+        log("passed to bluePlayer");
         playerButton->setPosition(Vec2(140, playerButton->getPosition().y));
         playerButton->setVisible(true);
         playerButton->setTouchEnabled(true);
+        playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, bluePlayer));
+        adjustPlayerTokensOpactity(bluePlayer);
         currentlyPlaying = bluePlayer;
         return;
     }
+}
+
+
+void MainMenu::adjustPlayerTokensOpactity(Player* _player)
+{
+    /*auto actionBlink = Blink::create(1.0, 3);
+    auto _seq = RepeatForever::create(Sequence::create(actionBlink, NULL, NULL));
+    redPlayer->getButton(1)->runAction(_seq);
+
+    redPlayer->getButton(1)->setOpacity(GLubyte(120));
+    redPlayer->getButton(2)->setOpacity(GLubyte(120));
+    redPlayer->getButton(3)->setOpacity(GLubyte(120));
+    redPlayer->getButton(4)->setOpacity(GLubyte(120));
+
+    greenPlayer->getButton(1)->setOpacity(GLubyte(120));
+    greenPlayer->getButton(2)->setOpacity(GLubyte(120));
+    greenPlayer->getButton(3)->setOpacity(GLubyte(120));
+    greenPlayer->getButton(4)->setOpacity(GLubyte(120));
+
+    yellowPlayer->getButton(1)->setOpacity(GLubyte(120));
+    yellowPlayer->getButton(2)->setOpacity(GLubyte(120));
+    yellowPlayer->getButton(3)->setOpacity(GLubyte(120));
+    yellowPlayer->getButton(4)->setOpacity(GLubyte(120));
+
+    bluePlayer->getButton(1)->setOpacity(GLubyte(120));
+    bluePlayer->getButton(2)->setOpacity(GLubyte(120));
+    bluePlayer->getButton(3)->setOpacity(GLubyte(120));
+    bluePlayer->getButton(4)->setOpacity(GLubyte(120));
+
+    _player->getButton(1)->setOpacity(GLubyte(255));
+    _player->getButton(2)->setOpacity(GLubyte(255));
+    _player->getButton(3)->setOpacity(GLubyte(255));
+    _player->getButton(4)->setOpacity(GLubyte(255));*/
 }
 
 

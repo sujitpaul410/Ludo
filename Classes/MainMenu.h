@@ -37,6 +37,8 @@ private:
 
     static bool hasMadePlayerPlay;
 
+    static void adjustPlayerTokensOpactity(Player* _player);
+
 public:
     static cocos2d::Scene* createScene();
 
@@ -54,7 +56,7 @@ public:
     static void hidePlayerButton();
     static void playRollDiceAnim();
 
-    void makePlayerPlay(Player* _player);
+    static void makePlayerPlay(Player* _player);
 
     static void passPlayerTurn();
 };
