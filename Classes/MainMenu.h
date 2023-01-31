@@ -37,7 +37,7 @@ private:
 
     static bool hasMadePlayerPlay;
 
-    static void adjustPlayerTokensOpactity(Player* _player);
+    static void maintainZorderOfCurrentPlayer(Player* _player);
 
 public:
     static cocos2d::Scene* createScene();
@@ -59,6 +59,16 @@ public:
     static void makePlayerPlay(Player* _player);
 
     static void passPlayerTurn();
+
+    static Player* getBluePlayer();
+    static Player* getRedPlayer();
+    static Player* getGreenPlayer();
+    static Player* getYellowPlayer();
+
+    static Vec2 getBluePlayerTokenPos(int _tokenID);
+    static Vec2 getRedPlayerTokenPos(int _tokenID);
+    static Vec2 getGreenPlayerTokenPos(int _tokenID);
+    static Vec2 getYellowPlayerTokenPos(int _tokenID);
 };
 
 #endif

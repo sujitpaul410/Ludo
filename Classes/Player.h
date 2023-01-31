@@ -21,7 +21,7 @@ private:
 	Token* fourthButton;
 
 	//route
-	cocos2d::Vec2 route[51] = { Vec2(529,149),
+	cocos2d::Vec2 route[57] = { Vec2(529,149),
 								Vec2(529,195),
 								Vec2(529,243),
 								Vec2(529,290),
@@ -71,9 +71,16 @@ private:
 								Vec2(622,195),
 								Vec2(623,148),
 								Vec2(622,100),
-								Vec2(576,100) };
+								Vec2(576,100),
+								
+								Vec2(576,147),
+								Vec2(576,195),
+								Vec2(576,243),
+								Vec2(576,290),
+								Vec2(576,337),
+								Vec2(576,390) };
 
-	cocos2d::Vec2 routeRed[51] = {	Vec2(293,479),
+	cocos2d::Vec2 routeRed[57] = {	Vec2(293,479),
 									Vec2(340,479),
 									Vec2(387,479),
 									Vec2(434,479),
@@ -111,6 +118,7 @@ private:
 									Vec2(623,148),
 									Vec2(622,100),
 									Vec2(576,100),
+									Vec2(529,100),
 									Vec2(529,149),
 									Vec2(529,195),
 									Vec2(529,243),
@@ -123,9 +131,16 @@ private:
 									Vec2(293,384),
 									Vec2(244,384),
 									Vec2(244,431),
-									Vec2(244,479) };
+	
 
-	cocos2d::Vec2 routeGreen[51] = { 
+									Vec2(292,432),
+									Vec2(340,432),
+									Vec2(387,431),
+									Vec2(434,431),
+									Vec2(482,431),
+									Vec2(531,431), };
+
+	cocos2d::Vec2 routeGreen[57] = { 
 									Vec2(624,716),
 									Vec2(624,668),
 									Vec2(624,620),
@@ -151,6 +166,7 @@ private:
 									Vec2(623,148),
 									Vec2(622,100),
 									Vec2(576,100),
+									Vec2(529,100),
 									Vec2(529,149),
 									Vec2(529,195),
 									Vec2(529,243),
@@ -176,9 +192,15 @@ private:
 									Vec2(528,714),
 									Vec2(528,763),
 									Vec2(576,763),
-									Vec2(624,763) };
 
-	cocos2d::Vec2 routeYellow[51] ={
+									Vec2(576,716),
+									Vec2(576,668),
+									Vec2(576,621),
+									Vec2(576,574),
+									Vec2(576,526),
+									Vec2(576,474) };
+
+	cocos2d::Vec2 routeYellow[57] ={
 									Vec2(860,385),
 									Vec2(812,385),
 									Vec2(766,385),
@@ -191,6 +213,7 @@ private:
 									Vec2(623,148),
 									Vec2(622,100),
 									Vec2(576,100),
+									Vec2(529,100),
 									Vec2(529,149),
 									Vec2(529,195),
 									Vec2(529,243),
@@ -229,7 +252,13 @@ private:
 									Vec2(862,479),
 									Vec2(906,479),
 									Vec2(906,432),
-									Vec2(906,385), };
+
+									Vec2(860,432),
+									Vec2(813,432),
+									Vec2(765,432),
+									Vec2(719,432),
+									Vec2(671,432),
+									Vec2(619,432) };
 
 	void moveOneStep(float dt);
 
@@ -237,6 +266,9 @@ private:
 
 	void setButtonActive(cocos2d::ui::Button* _button, bool _state);
 	void Player::setTokenClickEvent(Token* _button, std::string _buttonName);
+
+	bool isTokenInSafeZone(int _pos);
+	bool hasAdvantageTurn;
 
 public:
 	Player(std::string _spritePath, std::string _category);

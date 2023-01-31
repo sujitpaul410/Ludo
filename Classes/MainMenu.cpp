@@ -363,7 +363,7 @@ void MainMenu::makePlayerPlay(Player* _player)
     playerButton->setTouchEnabled(true);
     playerButton->setVisible(true);
     playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, _player));
-    adjustPlayerTokensOpactity(_player);
+    maintainZorderOfCurrentPlayer(_player);
     hasMadePlayerPlay = true;
 }
 
@@ -376,7 +376,7 @@ void MainMenu::passPlayerTurn()
         playerButton->setVisible(true);
         playerButton->setTouchEnabled(true);
         playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, redPlayer));
-        adjustPlayerTokensOpactity(redPlayer);
+        maintainZorderOfCurrentPlayer(redPlayer);
         currentlyPlaying = redPlayer;
         return;
     }
@@ -387,7 +387,7 @@ void MainMenu::passPlayerTurn()
         playerButton->setVisible(true);
         playerButton->setTouchEnabled(true);
         playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, greenPlayer));
-        adjustPlayerTokensOpactity(greenPlayer);
+        maintainZorderOfCurrentPlayer(greenPlayer);
         currentlyPlaying = greenPlayer;
         return;
     }
@@ -398,7 +398,7 @@ void MainMenu::passPlayerTurn()
         playerButton->setVisible(true);
         playerButton->setTouchEnabled(true);
         playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, yellowPlayer));
-        adjustPlayerTokensOpactity(yellowPlayer);
+        maintainZorderOfCurrentPlayer(yellowPlayer);
         currentlyPlaying = yellowPlayer;
         return;
     }
@@ -409,43 +409,10 @@ void MainMenu::passPlayerTurn()
         playerButton->setVisible(true);
         playerButton->setTouchEnabled(true);
         playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, bluePlayer));
-        adjustPlayerTokensOpactity(bluePlayer);
+        maintainZorderOfCurrentPlayer(bluePlayer);
         currentlyPlaying = bluePlayer;
         return;
     }
-}
-
-
-void MainMenu::adjustPlayerTokensOpactity(Player* _player)
-{
-    /*auto actionBlink = Blink::create(1.0, 3);
-    auto _seq = RepeatForever::create(Sequence::create(actionBlink, NULL, NULL));
-    redPlayer->getButton(1)->runAction(_seq);
-
-    redPlayer->getButton(1)->setOpacity(GLubyte(120));
-    redPlayer->getButton(2)->setOpacity(GLubyte(120));
-    redPlayer->getButton(3)->setOpacity(GLubyte(120));
-    redPlayer->getButton(4)->setOpacity(GLubyte(120));
-
-    greenPlayer->getButton(1)->setOpacity(GLubyte(120));
-    greenPlayer->getButton(2)->setOpacity(GLubyte(120));
-    greenPlayer->getButton(3)->setOpacity(GLubyte(120));
-    greenPlayer->getButton(4)->setOpacity(GLubyte(120));
-
-    yellowPlayer->getButton(1)->setOpacity(GLubyte(120));
-    yellowPlayer->getButton(2)->setOpacity(GLubyte(120));
-    yellowPlayer->getButton(3)->setOpacity(GLubyte(120));
-    yellowPlayer->getButton(4)->setOpacity(GLubyte(120));
-
-    bluePlayer->getButton(1)->setOpacity(GLubyte(120));
-    bluePlayer->getButton(2)->setOpacity(GLubyte(120));
-    bluePlayer->getButton(3)->setOpacity(GLubyte(120));
-    bluePlayer->getButton(4)->setOpacity(GLubyte(120));
-
-    _player->getButton(1)->setOpacity(GLubyte(255));
-    _player->getButton(2)->setOpacity(GLubyte(255));
-    _player->getButton(3)->setOpacity(GLubyte(255));
-    _player->getButton(4)->setOpacity(GLubyte(255));*/
 }
 
 
@@ -502,3 +469,172 @@ void MainMenu::stopBGM()
     audioInstance::stop(bgmID);
 }
 
+
+Player* MainMenu::getBluePlayer()
+{
+    return bluePlayer;
+}
+Player* MainMenu::getRedPlayer()
+{
+    return redPlayer;
+}
+Player* MainMenu::getGreenPlayer()
+{
+    return greenPlayer;
+}
+Player* MainMenu::getYellowPlayer()
+{
+    return yellowPlayer;
+}
+
+Vec2 MainMenu::getBluePlayerTokenPos(int _tokenID)
+{
+    if (_tokenID == 1)
+    {
+        return Vec2(321, 258);
+    }
+    else if (_tokenID == 2)
+    {
+        return Vec2(321, 181);
+    }
+    else if (_tokenID == 3)
+    {
+        return Vec2(405, 258);
+    }
+    else if (_tokenID == 4)
+    {
+        return Vec2(405, 181);
+    }
+}
+Vec2 MainMenu::getRedPlayerTokenPos(int _tokenID)
+{
+    if (_tokenID == 1)
+    {
+        return Vec2(322, 683);
+    }
+    else if (_tokenID == 2)
+    {
+        return Vec2(322, 606);
+    }
+    else if (_tokenID == 3)
+    {
+        return Vec2(406, 683);
+    }
+    else if (_tokenID == 4)
+    {
+        return Vec2(406, 606);
+    }
+}
+Vec2 MainMenu::getGreenPlayerTokenPos(int _tokenID)
+{
+    if (_tokenID == 1)
+    {
+        return Vec2(747, 683);
+    }
+    else if (_tokenID == 2)
+    {
+        return Vec2(747, 606);
+    }
+    else if (_tokenID == 3)
+    {
+        return Vec2(831, 683);
+    }
+    else if (_tokenID == 4)
+    {
+        return Vec2(831, 606);
+    }
+}
+Vec2 MainMenu::getYellowPlayerTokenPos(int _tokenID)
+{
+    if (_tokenID == 1)
+    {
+        return Vec2(747, 258);
+    }
+    else if (_tokenID == 2)
+    {
+        return Vec2(747, 181);
+    }
+    else if (_tokenID == 3)
+    {
+        return Vec2(831, 258);
+    }
+    else if (_tokenID == 4)
+    {
+        return Vec2(831, 181);
+    }
+}
+
+void MainMenu::maintainZorderOfCurrentPlayer(Player* _player)
+{
+    auto _scene = Director::getInstance()->getRunningScene();
+
+    auto _bpFirstToken = _scene->getChildByName("bluePlayerFirstToken");
+    auto _bpsecondToken = _scene->getChildByName("bluePlayerSecondToken");
+    auto _bpThirdToken = _scene->getChildByName("bluePlayerThirdToken");
+    auto _bpFourthToken = _scene->getChildByName("bluePlayerFourthToken");
+
+    auto _rpFirstToken = _scene->getChildByName("redPlayerFirstToken");
+    auto _rpsecondToken = _scene->getChildByName("redPlayerSecondToken");
+    auto _rpThirdToken = _scene->getChildByName("redPlayerThirdToken");
+    auto _rpFourthToken = _scene->getChildByName("redPlayerFourthToken");
+
+    auto _gpFirstToken = _scene->getChildByName("greenPlayerFirstToken");
+    auto _gpsecondToken = _scene->getChildByName("greenPlayerSecondToken");
+    auto _gpThirdToken = _scene->getChildByName("greenPlayerThirdToken");
+    auto _gpFourthToken = _scene->getChildByName("greenPlayerFourthToken");
+
+    auto _ypFirstToken = _scene->getChildByName("yellowPlayerFirstToken");
+    auto _ypsecondToken = _scene->getChildByName("yellowPlayerSecondToken");
+    auto _ypThirdToken = _scene->getChildByName("yellowPlayerThirdToken");
+    auto _ypFourthToken = _scene->getChildByName("yellowPlayerFourthToken");
+
+
+    _bpFirstToken->setLocalZOrder(15);
+    _bpsecondToken->setLocalZOrder(16);
+    _bpThirdToken->setLocalZOrder(17);
+    _bpFourthToken->setLocalZOrder(18);
+
+    _rpFirstToken->setLocalZOrder(15);
+    _rpsecondToken->setLocalZOrder(16);
+    _rpThirdToken->setLocalZOrder(17);
+    _rpFourthToken->setLocalZOrder(18);
+
+    _gpFirstToken->setLocalZOrder(15);
+    _gpsecondToken->setLocalZOrder(16);
+    _gpThirdToken->setLocalZOrder(17);
+    _gpFourthToken->setLocalZOrder(18);
+
+    _ypFirstToken->setLocalZOrder(15);
+    _ypsecondToken->setLocalZOrder(16);
+    _ypThirdToken->setLocalZOrder(17);
+    _ypFourthToken->setLocalZOrder(18);
+
+    if (_player->getCategory() == "BLUE")
+    {
+        _bpFirstToken->setLocalZOrder(19);
+        _bpsecondToken->setLocalZOrder(20);
+        _bpThirdToken->setLocalZOrder(21);
+        _bpFourthToken->setLocalZOrder(22);
+    }
+    else if (_player->getCategory() == "RED")
+    {
+        _rpFirstToken->setLocalZOrder(19);
+        _rpsecondToken->setLocalZOrder(20);
+        _rpThirdToken->setLocalZOrder(21);
+        _rpFourthToken->setLocalZOrder(22);
+    }
+    else if (_player->getCategory() == "GREEN")
+    {
+        _gpFirstToken->setLocalZOrder(19);
+        _gpsecondToken->setLocalZOrder(20);
+        _gpThirdToken->setLocalZOrder(21);
+        _gpFourthToken->setLocalZOrder(22);
+    }
+    else if (_player->getCategory() == "YELLOW")
+    {
+        _ypFirstToken->setLocalZOrder(19);
+        _ypsecondToken->setLocalZOrder(20);
+        _ypThirdToken->setLocalZOrder(21);
+        _ypFourthToken->setLocalZOrder(22);
+    }
+}

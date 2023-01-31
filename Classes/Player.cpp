@@ -11,6 +11,7 @@ Player::Player(std::string _spritePath, std::string _category)
 	hasWon = false;
 	category = _category;
 	currentRollVal = 0;
+	hasAdvantageTurn = false;
 
 	firstButton = new Token(1, _spritePath);
 	secondButton = new Token(2, _spritePath);
@@ -128,7 +129,21 @@ void Player::setTokenClickEvent(Token* _button, std::string _buttonName)
 	{
 		this->move(_button, currentRollVal, Director::getInstance()->getRunningScene()->getChildByName(_buttonName));
 
-		MainMenu::passPlayerTurn();
+		float delay = 0.7f;
+		auto delayAction = DelayTime::create(delay);
+		auto funcCallback = CallFunc::create([this]() {
+			if (this->hasAdvantageTurn)
+			{
+				hasAdvantageTurn = false;
+				MainMenu::makePlayerPlay(this);
+			}
+			else
+			{
+				MainMenu::passPlayerTurn();
+			}
+		});
+		auto _seq = Repeat::create(Sequence::create(delayAction, funcCallback, NULL), 1);
+		Director::getInstance()->getRunningScene()->runAction(_seq);
 	}
 }
 
@@ -164,13 +179,17 @@ cocos2d::ui::Button* Player::getButton(int _id)
 void Player::move(Token* _token, int _steps, Node* _node)
 {
 	firstButton->getButton()->stopAllActions();
-	firstButton->getButton()->setVisible(true);
+	//firstButton->getButton()->setVisible(true);
+	firstButton->getButton()->setOpacity(GLubyte(255));
 	secondButton->getButton()->stopAllActions();
-	secondButton->getButton()->setVisible(true);
+	//secondButton->getButton()->setVisible(true);
+	secondButton->getButton()->setOpacity(GLubyte(255));
 	thirdButton->getButton()->stopAllActions();
-	thirdButton->getButton()->setVisible(true);
+	//thirdButton->getButton()->setVisible(true);
+	thirdButton->getButton()->setOpacity(GLubyte(255));
 	fourthButton->getButton()->stopAllActions();
-	fourthButton->getButton()->setVisible(true);
+	//fourthButton->getButton()->setVisible(true);
+	fourthButton->getButton()->setOpacity(GLubyte(255));
 
 	if (category == "BLUE")
 	{
@@ -273,6 +292,391 @@ void Player::move(Token* _token, int _steps, Node* _node)
 	else
 	{
 		_node->stopActionByTag(3333);
+		log("CURRENT_POS: %d, IS_SAFE_POINT: %d", _token->getCurrentPos(), isTokenInSafeZone(_token->getCurrentPos()));
+		if (category == "RED" && !isTokenInSafeZone(_token->getCurrentPos()))
+		{
+			auto _bluePlayer = MainMenu::getBluePlayer();
+			auto _greenPlayer = MainMenu::getGreenPlayer();
+			auto _yellowPlayer = MainMenu::getYellowPlayer();
+
+			//BLUE
+			if (_bluePlayer->retrieveToken(1)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("BLUE-1 collided with RED");
+				_bluePlayer->retrieveToken(1)->setCurrentPos(0);
+				_bluePlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(1));
+				hasAdvantageTurn = true;
+			}
+			else if (_bluePlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("BLUE-2 collided with RED");
+				_bluePlayer->retrieveToken(2)->setCurrentPos(0);
+				_bluePlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(2));
+				hasAdvantageTurn = true;
+			}
+			else if (_bluePlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("BLUE-3 collided with RED");
+				_bluePlayer->retrieveToken(3)->setCurrentPos(0);
+				_bluePlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(3));
+				hasAdvantageTurn = true;
+			}
+			else if (_bluePlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("BLUE-4 collided with RED");
+				_bluePlayer->retrieveToken(4)->setCurrentPos(0);
+				_bluePlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(4));
+				hasAdvantageTurn = true;
+			}
+
+			//GREEN
+			else if (_greenPlayer->retrieveToken(1)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("GREEN-1 collided with RED");
+				_greenPlayer->retrieveToken(1)->setCurrentPos(0);
+				_greenPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(1));
+				hasAdvantageTurn = true;
+			}
+			else if (_greenPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("GREEN-2 collided with RED");
+				_greenPlayer->retrieveToken(2)->setCurrentPos(0);
+				_greenPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(2));
+				hasAdvantageTurn = true;
+			}
+			else if (_greenPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("GREEN-3 collided with RED");
+				_greenPlayer->retrieveToken(3)->setCurrentPos(0);
+				_greenPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(3));
+				hasAdvantageTurn = true;
+			}
+			else if (_greenPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("GREEN-4 collided with RED");
+				_greenPlayer->retrieveToken(4)->setCurrentPos(0);
+				_greenPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(4));
+				hasAdvantageTurn = true;
+			}
+
+			//YELLOW
+			else if (_yellowPlayer->retrieveToken(1)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("YELLOW-1 collided with RED");
+				_yellowPlayer->retrieveToken(1)->setCurrentPos(0);
+				_yellowPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(1));
+				hasAdvantageTurn = true;
+			}
+			else if (_yellowPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("YELLOW-2 collided with RED");
+				_yellowPlayer->retrieveToken(2)->setCurrentPos(0);
+				_yellowPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(2));
+				hasAdvantageTurn = true;
+			}
+			else if (_yellowPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("YELLOW-3 collided with RED");
+				_yellowPlayer->retrieveToken(3)->setCurrentPos(0);
+				_yellowPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(3));
+				hasAdvantageTurn = true;
+			}
+			else if (_yellowPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("YELLOW-4 collided with RED");
+				_yellowPlayer->retrieveToken(4)->setCurrentPos(0);
+				_yellowPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(4));
+				hasAdvantageTurn = true;
+			}
+		}
+		if (category == "GREEN" && !isTokenInSafeZone(_token->getCurrentPos()))
+		{
+			auto _bluePlayer = MainMenu::getBluePlayer();
+			auto _redPlayer = MainMenu::getRedPlayer();
+			auto _yellowPlayer = MainMenu::getYellowPlayer();
+
+			//BLUE
+			if (_bluePlayer->retrieveToken(1)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("BLUE-1 collided with GREEN");
+				_bluePlayer->retrieveToken(1)->setCurrentPos(0);
+				_bluePlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(1));
+				hasAdvantageTurn = true;
+			}
+			else if (_bluePlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("BLUE-2 collided with GREEN");
+				_bluePlayer->retrieveToken(2)->setCurrentPos(0);
+				_bluePlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(2));
+				hasAdvantageTurn = true;
+			}
+			else if (_bluePlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("BLUE-3 collided with GREEN");
+				_bluePlayer->retrieveToken(3)->setCurrentPos(0);
+				_bluePlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(3));
+				hasAdvantageTurn = true;
+			}
+			else if (_bluePlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("BLUE-4 collided with GREEN");
+				_bluePlayer->retrieveToken(4)->setCurrentPos(0);
+				_bluePlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(4));
+				hasAdvantageTurn = true;
+			}
+
+			//RED
+			else if (_redPlayer->retrieveToken(1)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("RED-1 collided with GREEN");
+				_redPlayer->retrieveToken(1)->setCurrentPos(0);
+				_redPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(1));
+				hasAdvantageTurn = true;
+			}
+			else if (_redPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("RED-2 collided with GREEN");
+				_redPlayer->retrieveToken(2)->setCurrentPos(0);
+				_redPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(2));
+				hasAdvantageTurn = true;
+			}
+			else if (_redPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("RED-3 collided with GREEN");
+				_redPlayer->retrieveToken(3)->setCurrentPos(0);
+				_redPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(3));
+				hasAdvantageTurn = true;
+			}
+			else if (_redPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("RED-4 collided with GREEN");
+				_redPlayer->retrieveToken(4)->setCurrentPos(0);
+				_redPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(4));
+				hasAdvantageTurn = true;
+			}
+
+			//YELLOW
+			else if (_yellowPlayer->retrieveToken(1)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("YELLOW-1 collided with GREEN");
+				_yellowPlayer->retrieveToken(1)->setCurrentPos(0);
+				_yellowPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(1));
+				hasAdvantageTurn = true;
+			}
+			else if (_yellowPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("YELLOW-2 collided with GREEN");
+				_yellowPlayer->retrieveToken(2)->setCurrentPos(0);
+				_yellowPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(2));
+				hasAdvantageTurn = true;
+			}
+			else if (_yellowPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("YELLOW-3 collided with GREEN");
+				_yellowPlayer->retrieveToken(3)->setCurrentPos(0);
+				_yellowPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(3));
+				hasAdvantageTurn = true;
+			}
+			else if (_yellowPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("YELLOW-4 collided with GREEN");
+				_yellowPlayer->retrieveToken(4)->setCurrentPos(0);
+				_yellowPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(4));
+				hasAdvantageTurn = true;
+			}
+		}
+		if (category == "YELLOW" && !isTokenInSafeZone(_token->getCurrentPos()))
+		{
+			auto _bluePlayer = MainMenu::getBluePlayer();
+			auto _greenPlayer = MainMenu::getGreenPlayer();
+			auto _redPlayer = MainMenu::getRedPlayer();
+
+			//BLUE
+			if (_bluePlayer->retrieveToken(1)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("BLUE-1 collided with YELLOW");
+				_bluePlayer->retrieveToken(1)->setCurrentPos(0);
+				_bluePlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(1));
+				hasAdvantageTurn = true;
+			}
+			else if (_bluePlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("BLUE-2 collided with YELLOW");
+				_bluePlayer->retrieveToken(2)->setCurrentPos(0);
+				_bluePlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(2));
+				hasAdvantageTurn = true;
+			}
+			else if (_bluePlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("BLUE-3 collided with YELLOW");
+				_bluePlayer->retrieveToken(3)->setCurrentPos(0);
+				_bluePlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(3));
+				hasAdvantageTurn = true;
+			}
+			else if (_bluePlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("BLUE-4 collided with YELLOW");
+				_bluePlayer->retrieveToken(4)->setCurrentPos(0);
+				_bluePlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(4));
+				hasAdvantageTurn = true;
+			}
+
+			//GREEN
+			else if (_greenPlayer->retrieveToken(1)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("GREEN-1 collided with YELLOW");
+				_greenPlayer->retrieveToken(1)->setCurrentPos(0);
+				_greenPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(1));
+				hasAdvantageTurn = true;
+			}
+			else if (_greenPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("GREEN-2 collided with YELLOW");
+				_greenPlayer->retrieveToken(2)->setCurrentPos(0);
+				_greenPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(2));
+				hasAdvantageTurn = true;
+			}
+			else if (_greenPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("GREEN-3 collided with YELLOW");
+				_greenPlayer->retrieveToken(3)->setCurrentPos(0);
+				_greenPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(3));
+				hasAdvantageTurn = true;
+			}
+			else if (_greenPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("GREEN-4 collided with YELLOW");
+				_greenPlayer->retrieveToken(4)->setCurrentPos(0);
+				_greenPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(4));
+				hasAdvantageTurn = true;
+			}
+
+			//RED
+			else if (_redPlayer->retrieveToken(1)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("RED-1 collided with YELLOW");
+				_redPlayer->retrieveToken(1)->setCurrentPos(0);
+				_redPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(1));
+				hasAdvantageTurn = true;
+			}
+			else if (_redPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("RED-2 collided with YELLOW");
+				_redPlayer->retrieveToken(2)->setCurrentPos(0);
+				_redPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(2));
+				hasAdvantageTurn = true;
+			}
+			else if (_redPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("RED-3 collided with YELLOW");
+				_redPlayer->retrieveToken(3)->setCurrentPos(0);
+				_redPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(3));
+				hasAdvantageTurn = true;
+			}
+			else if (_redPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("RED-4 collided with YELLOW");
+				_redPlayer->retrieveToken(4)->setCurrentPos(0);
+				_redPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(4));
+				hasAdvantageTurn = true;
+			}
+		}
+		if (category == "BLUE" && !isTokenInSafeZone(_token->getCurrentPos()))
+		{
+			auto _redPlayer = MainMenu::getRedPlayer();
+			auto _greenPlayer = MainMenu::getGreenPlayer();
+			auto _yellowPlayer = MainMenu::getYellowPlayer();
+
+			//RED
+			if (_redPlayer->retrieveToken(1)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("RED-1 collided with BLUE");
+				_redPlayer->retrieveToken(1)->setCurrentPos(0);
+				_redPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(1));
+				hasAdvantageTurn = true;
+			}
+			else if (_redPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("RED-2 collided with BLUE");
+				_redPlayer->retrieveToken(2)->setCurrentPos(0);
+				_redPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(2));
+				hasAdvantageTurn = true;
+			}
+			else if (_redPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("RED-3 collided with BLUE");
+				_redPlayer->retrieveToken(3)->setCurrentPos(0);
+				_redPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(3));
+				hasAdvantageTurn = true;
+			}
+			else if (_redPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("RED-4 collided with BLUE");
+				_redPlayer->retrieveToken(4)->setCurrentPos(0);
+				_redPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(4));
+				hasAdvantageTurn = true;
+			}
+
+			//GREEN
+			else if (_greenPlayer->retrieveToken(1)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("GREEN-1 collided with BLUE");
+				_greenPlayer->retrieveToken(1)->setCurrentPos(0);
+				_greenPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(1));
+				hasAdvantageTurn = true;
+			}
+			else if (_greenPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("GREEN-2 collided with BLUE");
+				_greenPlayer->retrieveToken(2)->setCurrentPos(0);
+				_greenPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(2));
+				hasAdvantageTurn = true;
+			}
+			else if (_greenPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("GREEN-3 collided with BLUE");
+				_greenPlayer->retrieveToken(3)->setCurrentPos(0);
+				_greenPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(3));
+				hasAdvantageTurn = true;
+			}
+			else if (_greenPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("GREEN-4 collided with BLUE");
+				_greenPlayer->retrieveToken(4)->setCurrentPos(0);
+				_greenPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(4));
+				hasAdvantageTurn = true;
+			}
+
+			//YELLOW
+			else if (_yellowPlayer->retrieveToken(1)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("YELLOW-1 collided with BLUE");
+				_yellowPlayer->retrieveToken(1)->setCurrentPos(0);
+				_yellowPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(1));
+				hasAdvantageTurn = true;
+			}
+			else if (_yellowPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("YELLOW-2 collided with BLUE");
+				_yellowPlayer->retrieveToken(2)->setCurrentPos(0);
+				_yellowPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(2));
+				hasAdvantageTurn = true;
+			}
+			else if (_yellowPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("YELLOW-3 collided with BLUE");
+				_yellowPlayer->retrieveToken(3)->setCurrentPos(0);
+				_yellowPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(3));
+				hasAdvantageTurn = true;
+			}
+			else if (_yellowPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
+			{
+				log("YELLOW-4 collided with BLUE");
+				_yellowPlayer->retrieveToken(4)->setCurrentPos(0);
+				_yellowPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(4));
+				hasAdvantageTurn = true;
+			}
+		}
 	}
 		});
 	auto _seq = RepeatForever::create(Sequence::create(delayAction, funcCallback, NULL));
@@ -422,8 +826,8 @@ void Player::playTurn()
 			setButtonActive(thirdButton->getButton(), true);
 			setButtonActive(fourthButton->getButton(), true);
 
-			auto actionBlink = Blink::create(1.0, 3);
-			auto _seq = RepeatForever::create(Sequence::create(actionBlink, NULL, NULL));
+			auto actionBlink = Blink::create(1.0, 1);
+			auto _seq = RepeatForever::create(Sequence::create(FadeOut::create(0.2f), FadeIn::create(0.2f), NULL));
 			firstButton->getButton()->runAction(_seq);
 			secondButton->getButton()->runAction(_seq->clone());
 			thirdButton->getButton()->runAction(_seq->clone());
@@ -431,8 +835,8 @@ void Player::playTurn()
 		}
 		else if (_numTokensInBase < 4 && currentRollVal != 6)
 		{
-			auto actionBlink = Blink::create(1.0, 3);
-			auto _seq = RepeatForever::create(Sequence::create(actionBlink, NULL, NULL));
+			auto actionBlink = Blink::create(1.0, 1);
+			auto _seq = RepeatForever::create(Sequence::create(FadeOut::create(0.2f), FadeIn::create(0.2f), NULL));
 
 			if (category == "BLUE")
 			{
@@ -551,8 +955,8 @@ void Player::playTurn()
 			setButtonActive(thirdButton->getButton(), true);
 			setButtonActive(fourthButton->getButton(), true);
 
-			auto actionBlink = Blink::create(1.0, 3);
-			auto _seq = RepeatForever::create(Sequence::create(actionBlink, NULL, NULL));
+			auto actionBlink = Blink::create(1.0, 1);
+			auto _seq = RepeatForever::create(Sequence::create(FadeOut::create(0.2f), FadeIn::create(0.2f), NULL));
 			firstButton->getButton()->runAction(_seq);
 			secondButton->getButton()->runAction(_seq->clone());
 			thirdButton->getButton()->runAction(_seq->clone());
@@ -561,4 +965,33 @@ void Player::playTurn()
 	});
 	auto const _seq = Repeat::create(Sequence::create(delayAction, funcCallback, NULL), 1);
 	Director::getInstance()->getRunningScene()->runAction(_seq);
+}
+
+
+bool Player::isTokenInSafeZone(int _pos)
+{
+	switch (_pos)
+	{
+	case 1:
+	case 9:
+	case 14:
+	case 22:
+	case 27:
+	case 35:
+	case 40:
+	case 48:
+	case 52:
+	case 53:
+	case 54:
+	case 55:
+	case 56:
+	case 57:
+		return true;
+		break;
+
+	default:
+		return false;
+		break;
+	}
+
 }
