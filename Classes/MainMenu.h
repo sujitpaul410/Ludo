@@ -48,6 +48,11 @@ private:
 
     void DeclareStatusOfPlayerAfterCompletion(cocos2d::Label* _label, const std::string _string);
 
+    static void passTurnToBluePlayer();
+    static void passTurnToRedPlayer();
+    static void passTurnToGreenPlayer();
+    static void passTurnToYellowPlayer();
+
 public:
     static cocos2d::Scene* createScene();
 

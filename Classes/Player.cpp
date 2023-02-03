@@ -123,7 +123,21 @@ void Player::setTokenClickEvent(Token* _button, std::string _buttonName)
 	else if (currentRollVal == 6)
 	{
 		this->move(_button, 6, Director::getInstance()->getRunningScene()->getChildByName(_buttonName));
-		MainMenu::makePlayerPlay(this);
+
+		float delay = 0.7f;
+		auto delayAction = DelayTime::create(delay);
+		auto funcCallback = CallFunc::create([this]() {
+			if (!this->hasCompletedGame())
+			{
+				MainMenu::makePlayerPlay(this);
+			}
+			else
+			{
+				MainMenu::passPlayerTurn();
+			}
+		});
+		auto _seq = Repeat::create(Sequence::create(delayAction, funcCallback, NULL), 1);
+		Director::getInstance()->getRunningScene()->runAction(_seq);
 	}
 	else
 	{
@@ -303,6 +317,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 		if (this->retrieveToken(1)->getCurrentPos() == 57 && this->retrieveToken(2)->getCurrentPos() == 57 && this->retrieveToken(3)->getCurrentPos() == 57 && this->retrieveToken(4)->getCurrentPos() == 57)
 		{
 			hasWon = true;
+			hasAdvantageTurn = false;
 		}
 
 		log("CURRENT_POS: %d, IS_SAFE_POINT: %d", _token->getCurrentPos(), isTokenInSafeZone(_token->getCurrentPos()));
@@ -1038,25 +1053,36 @@ void Player::playTurn()
 			auto actionBlink = Blink::create(1.0, 1);
 			auto _seq = RepeatForever::create(Sequence::create(FadeOut::create(0.2f), FadeIn::create(0.2f), NULL));
 
+			int _numTokenEligibleToMove = 0;
+
 			if (firstButton->getCurrentPos() + currentRollVal <= 57)
 			{
 				setButtonActive(firstButton->getButton(), true);
 				firstButton->getButton()->runAction(_seq);
+				_numTokenEligibleToMove++;
 			}
 			if (secondButton->getCurrentPos() + currentRollVal <= 57)
 			{
 				setButtonActive(secondButton->getButton(), true);
 				secondButton->getButton()->runAction(_seq->clone());
+				_numTokenEligibleToMove++;
 			}
 			if (thirdButton->getCurrentPos() + currentRollVal <= 57)
 			{
 				setButtonActive(thirdButton->getButton(), true);
 				thirdButton->getButton()->runAction(_seq->clone());
+				_numTokenEligibleToMove++;
 			}
 			if (fourthButton->getCurrentPos() + currentRollVal <= 57)
 			{
 				setButtonActive(fourthButton->getButton(), true);
 				fourthButton->getButton()->runAction(_seq->clone());
+				_numTokenEligibleToMove++;
+			}
+
+			if (_numTokenEligibleToMove == 0)
+			{
+				MainMenu::passPlayerTurn();
 			}
 
 		}
