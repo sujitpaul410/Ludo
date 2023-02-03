@@ -270,6 +270,12 @@ void Player::move(Token* _token, int _steps, Node* _node)
 
 	//currentPos++;
 	int _targetPos = _token->getCurrentPos() + _steps;
+	if (_targetPos == 57)
+	{
+		log("HOME");
+		hasAdvantageTurn = true;
+		MainMenu::playTokenHomeSfx();
+	}
 	//auto _node = Node::create();
 	float delay = 0.1f;
 	auto delayAction = DelayTime::create(delay);
@@ -288,10 +294,17 @@ void Player::move(Token* _token, int _steps, Node* _node)
 		auto _nextPos = _token->getCurrentPos();
 		_nextPos++;
 		_token->setCurrentPos(_nextPos);
+		MainMenu::playDiceMovementSfx();
 	}
 	else
 	{
 		_node->stopActionByTag(3333);
+
+		if (this->retrieveToken(1)->getCurrentPos() == 57 && this->retrieveToken(2)->getCurrentPos() == 57 && this->retrieveToken(3)->getCurrentPos() == 57 && this->retrieveToken(4)->getCurrentPos() == 57)
+		{
+			hasWon = true;
+		}
+
 		log("CURRENT_POS: %d, IS_SAFE_POINT: %d", _token->getCurrentPos(), isTokenInSafeZone(_token->getCurrentPos()));
 		if (category == "RED" && !isTokenInSafeZone(_token->getCurrentPos()))
 		{
@@ -306,6 +319,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_bluePlayer->retrieveToken(1)->setCurrentPos(0);
 				_bluePlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(1));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_bluePlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -313,6 +327,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_bluePlayer->retrieveToken(2)->setCurrentPos(0);
 				_bluePlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(2));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_bluePlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -320,6 +335,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_bluePlayer->retrieveToken(3)->setCurrentPos(0);
 				_bluePlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(3));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_bluePlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -327,6 +343,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_bluePlayer->retrieveToken(4)->setCurrentPos(0);
 				_bluePlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(4));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 
 			//GREEN
@@ -336,6 +353,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_greenPlayer->retrieveToken(1)->setCurrentPos(0);
 				_greenPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(1));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_greenPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -343,6 +361,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_greenPlayer->retrieveToken(2)->setCurrentPos(0);
 				_greenPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(2));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_greenPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -350,6 +369,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_greenPlayer->retrieveToken(3)->setCurrentPos(0);
 				_greenPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(3));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_greenPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -357,6 +377,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_greenPlayer->retrieveToken(4)->setCurrentPos(0);
 				_greenPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(4));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 
 			//YELLOW
@@ -366,6 +387,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_yellowPlayer->retrieveToken(1)->setCurrentPos(0);
 				_yellowPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(1));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_yellowPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -373,6 +395,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_yellowPlayer->retrieveToken(2)->setCurrentPos(0);
 				_yellowPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(2));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_yellowPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -380,6 +403,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_yellowPlayer->retrieveToken(3)->setCurrentPos(0);
 				_yellowPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(3));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_yellowPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -387,6 +411,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_yellowPlayer->retrieveToken(4)->setCurrentPos(0);
 				_yellowPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(4));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 		}
 		if (category == "GREEN" && !isTokenInSafeZone(_token->getCurrentPos()))
@@ -402,6 +427,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_bluePlayer->retrieveToken(1)->setCurrentPos(0);
 				_bluePlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(1));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_bluePlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -409,6 +435,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_bluePlayer->retrieveToken(2)->setCurrentPos(0);
 				_bluePlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(2));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_bluePlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -416,6 +443,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_bluePlayer->retrieveToken(3)->setCurrentPos(0);
 				_bluePlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(3));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_bluePlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -423,6 +451,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_bluePlayer->retrieveToken(4)->setCurrentPos(0);
 				_bluePlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(4));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 
 			//RED
@@ -432,6 +461,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_redPlayer->retrieveToken(1)->setCurrentPos(0);
 				_redPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(1));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_redPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -439,6 +469,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_redPlayer->retrieveToken(2)->setCurrentPos(0);
 				_redPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(2));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_redPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -446,6 +477,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_redPlayer->retrieveToken(3)->setCurrentPos(0);
 				_redPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(3));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_redPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -453,6 +485,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_redPlayer->retrieveToken(4)->setCurrentPos(0);
 				_redPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(4));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 
 			//YELLOW
@@ -462,6 +495,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_yellowPlayer->retrieveToken(1)->setCurrentPos(0);
 				_yellowPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(1));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_yellowPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -469,6 +503,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_yellowPlayer->retrieveToken(2)->setCurrentPos(0);
 				_yellowPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(2));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_yellowPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -476,6 +511,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_yellowPlayer->retrieveToken(3)->setCurrentPos(0);
 				_yellowPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(3));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_yellowPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -483,6 +519,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_yellowPlayer->retrieveToken(4)->setCurrentPos(0);
 				_yellowPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(4));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 		}
 		if (category == "YELLOW" && !isTokenInSafeZone(_token->getCurrentPos()))
@@ -498,6 +535,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_bluePlayer->retrieveToken(1)->setCurrentPos(0);
 				_bluePlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(1));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_bluePlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -505,6 +543,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_bluePlayer->retrieveToken(2)->setCurrentPos(0);
 				_bluePlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(2));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_bluePlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -512,6 +551,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_bluePlayer->retrieveToken(3)->setCurrentPos(0);
 				_bluePlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(3));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_bluePlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -519,6 +559,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_bluePlayer->retrieveToken(4)->setCurrentPos(0);
 				_bluePlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getBluePlayerTokenPos(4));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 
 			//GREEN
@@ -528,6 +569,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_greenPlayer->retrieveToken(1)->setCurrentPos(0);
 				_greenPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(1));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_greenPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -535,6 +577,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_greenPlayer->retrieveToken(2)->setCurrentPos(0);
 				_greenPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(2));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_greenPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -542,6 +585,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_greenPlayer->retrieveToken(3)->setCurrentPos(0);
 				_greenPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(3));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_greenPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -549,6 +593,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_greenPlayer->retrieveToken(4)->setCurrentPos(0);
 				_greenPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(4));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 
 			//RED
@@ -558,6 +603,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_redPlayer->retrieveToken(1)->setCurrentPos(0);
 				_redPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(1));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_redPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -565,6 +611,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_redPlayer->retrieveToken(2)->setCurrentPos(0);
 				_redPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(2));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_redPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -572,6 +619,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_redPlayer->retrieveToken(3)->setCurrentPos(0);
 				_redPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(3));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_redPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -579,6 +627,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_redPlayer->retrieveToken(4)->setCurrentPos(0);
 				_redPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(4));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 		}
 		if (category == "BLUE" && !isTokenInSafeZone(_token->getCurrentPos()))
@@ -594,6 +643,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_redPlayer->retrieveToken(1)->setCurrentPos(0);
 				_redPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(1));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_redPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -601,6 +651,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_redPlayer->retrieveToken(2)->setCurrentPos(0);
 				_redPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(2));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_redPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -608,6 +659,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_redPlayer->retrieveToken(3)->setCurrentPos(0);
 				_redPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(3));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_redPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -615,6 +667,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_redPlayer->retrieveToken(4)->setCurrentPos(0);
 				_redPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getRedPlayerTokenPos(4));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 
 			//GREEN
@@ -624,6 +677,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_greenPlayer->retrieveToken(1)->setCurrentPos(0);
 				_greenPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(1));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_greenPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -631,6 +685,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_greenPlayer->retrieveToken(2)->setCurrentPos(0);
 				_greenPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(2));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_greenPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -638,6 +693,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_greenPlayer->retrieveToken(3)->setCurrentPos(0);
 				_greenPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(3));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_greenPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -645,6 +701,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_greenPlayer->retrieveToken(4)->setCurrentPos(0);
 				_greenPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getGreenPlayerTokenPos(4));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 
 			//YELLOW
@@ -654,6 +711,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_yellowPlayer->retrieveToken(1)->setCurrentPos(0);
 				_yellowPlayer->retrieveToken(1)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(1));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_yellowPlayer->retrieveToken(2)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -661,6 +719,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_yellowPlayer->retrieveToken(2)->setCurrentPos(0);
 				_yellowPlayer->retrieveToken(2)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(2));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_yellowPlayer->retrieveToken(3)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -668,6 +727,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_yellowPlayer->retrieveToken(3)->setCurrentPos(0);
 				_yellowPlayer->retrieveToken(3)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(3));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 			else if (_yellowPlayer->retrieveToken(4)->getButton()->getPosition() == _token->getButton()->getPosition())
 			{
@@ -675,6 +735,7 @@ void Player::move(Token* _token, int _steps, Node* _node)
 				_yellowPlayer->retrieveToken(4)->setCurrentPos(0);
 				_yellowPlayer->retrieveToken(4)->getButton()->setPosition(MainMenu::getYellowPlayerTokenPos(4));
 				hasAdvantageTurn = true;
+				MainMenu::playTokenElinationSfx();
 			}
 		}
 	}
@@ -709,7 +770,7 @@ Token* Player::retrieveToken(int _id)
 }
 
 
-bool Player::isWinner()
+bool Player::hasCompletedGame()
 {
 	return hasWon;
 }
@@ -722,6 +783,7 @@ std::string Player::getCategory()
 void Player::playTurn()
 {
 	log("Playing Turn");
+	MainMenu::playDiceRollSfx();
 	MainMenu::hidePlayerButton();
 	MainMenu::playRollDiceAnim();
 
@@ -838,129 +900,165 @@ void Player::playTurn()
 			auto actionBlink = Blink::create(1.0, 1);
 			auto _seq = RepeatForever::create(Sequence::create(FadeOut::create(0.2f), FadeIn::create(0.2f), NULL));
 
+			int _numTokenEligibleToMove = 0;
+
 			if (category == "BLUE")
 			{
-				if (!(firstButton->getButton()->getPosition().x == 321 && firstButton->getButton()->getPosition().y == 258))
+				if ((firstButton->getCurrentPos() + currentRollVal <= 57) && firstButton->getCurrentPos()<57 && !(firstButton->getButton()->getPosition().x == 321 && firstButton->getButton()->getPosition().y == 258))
 				{
 					setButtonActive(firstButton->getButton(), true);
 
 					firstButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
-				if (!(secondButton->getButton()->getPosition().x == 321 && secondButton->getButton()->getPosition().y == 181))
+				if ((secondButton->getCurrentPos() + currentRollVal <= 57) && secondButton->getCurrentPos() < 57 && !(secondButton->getButton()->getPosition().x == 321 && secondButton->getButton()->getPosition().y == 181))
 				{
 					setButtonActive(secondButton->getButton(), true);
 
 					secondButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
-				if (!(thirdButton->getButton()->getPosition().x == 405 && thirdButton->getButton()->getPosition().y == 258))
+				if ((thirdButton->getCurrentPos() + currentRollVal <= 57) && thirdButton->getCurrentPos() < 57 && !(thirdButton->getButton()->getPosition().x == 405 && thirdButton->getButton()->getPosition().y == 258))
 				{
 					setButtonActive(thirdButton->getButton(), true);
+					_numTokenEligibleToMove++;
 
 					thirdButton->getButton()->runAction(_seq->clone());
 				}
-				if (!(fourthButton->getButton()->getPosition().x == 405 && fourthButton->getButton()->getPosition().y == 181))
+				if ((fourthButton->getCurrentPos() + currentRollVal <= 57) && fourthButton->getCurrentPos() < 57 && !(fourthButton->getButton()->getPosition().x == 405 && fourthButton->getButton()->getPosition().y == 181))
 				{
 					setButtonActive(fourthButton->getButton(), true);
 
 					fourthButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
 			}
 			if (category == "RED")
 			{
-				if (!(firstButton->getButton()->getPosition().x == 322 && firstButton->getButton()->getPosition().y == 683))
+				if ((firstButton->getCurrentPos() + currentRollVal <= 57) && firstButton->getCurrentPos() < 57 && !(firstButton->getButton()->getPosition().x == 322 && firstButton->getButton()->getPosition().y == 683))
 				{
 					setButtonActive(firstButton->getButton(), true);
 
 					firstButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
-				if (!(secondButton->getButton()->getPosition().x == 322 && secondButton->getButton()->getPosition().y == 606))
+				if ((secondButton->getCurrentPos() + currentRollVal <= 57) && secondButton->getCurrentPos() < 57 && !(secondButton->getButton()->getPosition().x == 322 && secondButton->getButton()->getPosition().y == 606))
 				{
 					setButtonActive(secondButton->getButton(), true);
 
 					secondButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
-				if (!(thirdButton->getButton()->getPosition().x == 406 && thirdButton->getButton()->getPosition().y == 683))
+				if ((thirdButton->getCurrentPos() + currentRollVal <= 57) && thirdButton->getCurrentPos() < 57 && !(thirdButton->getButton()->getPosition().x == 406 && thirdButton->getButton()->getPosition().y == 683))
 				{
 					setButtonActive(thirdButton->getButton(), true);
 
 					thirdButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
-				if (!(fourthButton->getButton()->getPosition().x == 406 && fourthButton->getButton()->getPosition().y == 606))
+				if ((fourthButton->getCurrentPos() + currentRollVal <= 57) && fourthButton->getCurrentPos() < 57 && !(fourthButton->getButton()->getPosition().x == 406 && fourthButton->getButton()->getPosition().y == 606))
 				{
 					setButtonActive(fourthButton->getButton(), true);
 
 					fourthButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
 			}
 			if (category == "GREEN")
 			{
-				if (!(firstButton->getButton()->getPosition().x == 747 && firstButton->getButton()->getPosition().y == 683))
+				if ((firstButton->getCurrentPos() + currentRollVal <= 57) && firstButton->getCurrentPos() < 57 && !(firstButton->getButton()->getPosition().x == 747 && firstButton->getButton()->getPosition().y == 683))
 				{
 					setButtonActive(firstButton->getButton(), true);
 
 					firstButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
-				if (!(secondButton->getButton()->getPosition().x == 747 && secondButton->getButton()->getPosition().y == 606))
+				if ((secondButton->getCurrentPos() + currentRollVal <= 57) && secondButton->getCurrentPos() < 57 && !(secondButton->getButton()->getPosition().x == 747 && secondButton->getButton()->getPosition().y == 606))
 				{
 					setButtonActive(secondButton->getButton(), true);
 
 					secondButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
-				if (!(thirdButton->getButton()->getPosition().x == 831 && thirdButton->getButton()->getPosition().y == 683))
+				if ((thirdButton->getCurrentPos() + currentRollVal <= 57) && thirdButton->getCurrentPos() < 57 && !(thirdButton->getButton()->getPosition().x == 831 && thirdButton->getButton()->getPosition().y == 683))
 				{
 					setButtonActive(thirdButton->getButton(), true);
 
 					thirdButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
-				if (!(fourthButton->getButton()->getPosition().x == 831 && fourthButton->getButton()->getPosition().y == 606))
+				if ((fourthButton->getCurrentPos() + currentRollVal <= 57) && fourthButton->getCurrentPos() < 57 && !(fourthButton->getButton()->getPosition().x == 831 && fourthButton->getButton()->getPosition().y == 606))
 				{
 					setButtonActive(fourthButton->getButton(), true);
 
 					fourthButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
 			}
 			if (category == "YELLOW")
 			{
-				if (!(firstButton->getButton()->getPosition().x == 747 && firstButton->getButton()->getPosition().y == 258))
+				if ((firstButton->getCurrentPos() + currentRollVal <= 57) && firstButton->getCurrentPos() < 57 && !(firstButton->getButton()->getPosition().x == 747 && firstButton->getButton()->getPosition().y == 258))
 				{
 					setButtonActive(firstButton->getButton(), true);
 
 					firstButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
-				if (!(secondButton->getButton()->getPosition().x == 747 && secondButton->getButton()->getPosition().y == 181))
+				if ((secondButton->getCurrentPos() + currentRollVal <= 57) && secondButton->getCurrentPos() < 57 && !(secondButton->getButton()->getPosition().x == 747 && secondButton->getButton()->getPosition().y == 181))
 				{
 					setButtonActive(secondButton->getButton(), true);
 
 					secondButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
-				if (!(thirdButton->getButton()->getPosition().x == 831 && thirdButton->getButton()->getPosition().y == 258))
+				if ((thirdButton->getCurrentPos() + currentRollVal <= 57) && thirdButton->getCurrentPos() < 57 && !(thirdButton->getButton()->getPosition().x == 831 && thirdButton->getButton()->getPosition().y == 258))
 				{
 					setButtonActive(thirdButton->getButton(), true);
 
 					thirdButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
-				if (!(fourthButton->getButton()->getPosition().x == 831 && fourthButton->getButton()->getPosition().y == 181))
+				if ((fourthButton->getCurrentPos() + currentRollVal <= 57) && fourthButton->getCurrentPos() < 57 && !(fourthButton->getButton()->getPosition().x == 831 && fourthButton->getButton()->getPosition().y == 181))
 				{
 					setButtonActive(fourthButton->getButton(), true);
 
 					fourthButton->getButton()->runAction(_seq->clone());
+					_numTokenEligibleToMove++;
 				}
+			}
+
+			if (_numTokenEligibleToMove == 0)
+			{
+				MainMenu::passPlayerTurn();
 			}
 		}
 		else if (_numTokensInBase < 4 && currentRollVal == 6)
 		{
 			currentRollVal = 6;
-			setButtonActive(firstButton->getButton(), true);
-			setButtonActive(secondButton->getButton(), true);
-			setButtonActive(thirdButton->getButton(), true);
-			setButtonActive(fourthButton->getButton(), true);
-
 			auto actionBlink = Blink::create(1.0, 1);
 			auto _seq = RepeatForever::create(Sequence::create(FadeOut::create(0.2f), FadeIn::create(0.2f), NULL));
-			firstButton->getButton()->runAction(_seq);
-			secondButton->getButton()->runAction(_seq->clone());
-			thirdButton->getButton()->runAction(_seq->clone());
-			fourthButton->getButton()->runAction(_seq->clone());
+
+			if (firstButton->getCurrentPos() + currentRollVal <= 57)
+			{
+				setButtonActive(firstButton->getButton(), true);
+				firstButton->getButton()->runAction(_seq);
+			}
+			if (secondButton->getCurrentPos() + currentRollVal <= 57)
+			{
+				setButtonActive(secondButton->getButton(), true);
+				secondButton->getButton()->runAction(_seq->clone());
+			}
+			if (thirdButton->getCurrentPos() + currentRollVal <= 57)
+			{
+				setButtonActive(thirdButton->getButton(), true);
+				thirdButton->getButton()->runAction(_seq->clone());
+			}
+			if (fourthButton->getCurrentPos() + currentRollVal <= 57)
+			{
+				setButtonActive(fourthButton->getButton(), true);
+				fourthButton->getButton()->runAction(_seq->clone());
+			}
+
 		}
 	});
 	auto const _seq = Repeat::create(Sequence::create(delayAction, funcCallback, NULL), 1);

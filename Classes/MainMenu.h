@@ -14,7 +14,7 @@ private:
     static cocos2d::Sprite* diceSprite;
     
     bool isMuted;
-    bool isPlaying;
+    static bool isPlaying;
     int bgmID;
     int clickID;
 
@@ -38,6 +38,15 @@ private:
     static bool hasMadePlayerPlay;
 
     static void maintainZorderOfCurrentPlayer(Player* _player);
+
+    cocos2d::Label* status_label_Blue;
+    cocos2d::Label* status_label_Red;
+    cocos2d::Label* status_label_Green;
+    cocos2d::Label* status_label_Yellow;
+
+    int numPlayersFinishedGame;
+
+    void DeclareStatusOfPlayerAfterCompletion(cocos2d::Label* _label, const std::string _string);
 
 public:
     static cocos2d::Scene* createScene();
@@ -69,6 +78,11 @@ public:
     static Vec2 getRedPlayerTokenPos(int _tokenID);
     static Vec2 getGreenPlayerTokenPos(int _tokenID);
     static Vec2 getYellowPlayerTokenPos(int _tokenID);
+
+    static void playDiceMovementSfx();
+    static void playDiceRollSfx();
+    static void playTokenElinationSfx();
+    static void playTokenHomeSfx();
 };
 
 #endif

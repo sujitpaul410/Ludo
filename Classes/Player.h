@@ -278,7 +278,7 @@ public:
 
 	void move(Token* _token, int _steps, Node* _node);
 
-	bool isWinner();
+	bool hasCompletedGame();
 
 	void playTurn();
 

@@ -10,6 +10,8 @@ cocos2d::ui::Button* MainMenu::playerButton = nullptr;
 
 bool MainMenu::hasMadePlayerPlay = false;
 
+bool MainMenu::isPlaying = false;
+
 cocos2d::Sprite* MainMenu::diceSprite = nullptr;
 
 Player* MainMenu::bluePlayer = nullptr;
@@ -70,15 +72,15 @@ bool MainMenu::init()
         // create menu, it's an autorelease object
         auto menu = Menu::create(closeItem, NULL);
         menu->setPosition(Vec2(visibleSize.width / 2 + 200, visibleSize.height / 22));
-        this->addChild(menu, 6);
+        this->addChild(menu, 38);
 
         auto play = Menu::create(playItem, NULL);
         play->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 22));
-        this->addChild(play, 4, "play");
+        this->addChild(play, 39, "play");
 
         auto volume = Menu::create(volumeItem, NULL);
         volume->setPosition(Vec2(visibleSize.width / 2 - 200, visibleSize.height / 22));
-        this->addChild(volume, 5, "volume");
+        this->addChild(volume, 40, "volume");
     }
 
 
@@ -95,7 +97,7 @@ bool MainMenu::init()
                                 origin.y + visibleSize.height - label->getContentSize().height));
 
         // add the label as a child to this layer
-        this->addChild(label, 3);
+        this->addChild(label, 34);
     }
 
     // Background
@@ -114,15 +116,16 @@ bool MainMenu::init()
         sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
         diceSprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
         maskSprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+        maskSprite->setContentSize(Size(1024, 736));
         maskSprite->setOpacity(200);
         textBG->setPosition(Vec2(origin.x + visibleSize.width / 2,
             origin.y + visibleSize.height - label->getContentSize().height-2));
 
         // add the sprite as a child to this layer
         this->addChild(sprite, 0, "background");
-        this->addChild(diceSprite, 1, "dice");
-        this->addChild(maskSprite, 2, "mask");
-        this->addChild(textBG, 2, "titleTextBG");
+        this->addChild(diceSprite, 35, "dice");
+        this->addChild(maskSprite, 37, "mask");
+        this->addChild(textBG, 33, "titleTextBG");
 
     }
 
@@ -305,6 +308,73 @@ bool MainMenu::init()
     playerButton->setVisible(false);
     this->addChild(playerButton, 23, "playerButton");
 
+    //label_Winner
+    status_label_Blue = Label::createWithTTF("Blue's Status", "fonts/Marker Felt.ttf", 35);
+    if (status_label_Blue == nullptr)
+    {
+        problemLoading("'fonts/Marker Felt.ttf'");
+    }
+    else
+    {
+        // position the label on the center of the screen
+        status_label_Blue->setColor(Color3B::BLACK);
+        status_label_Blue->setPosition(Vec2(356, 337));
+        status_label_Blue->setVisible(false);
+
+        // add the label as a child to this layer
+        this->addChild(status_label_Blue, 34);
+    }
+
+    status_label_Red = Label::createWithTTF("Red's Status", "fonts/Marker Felt.ttf", 35);
+    if (status_label_Red == nullptr)
+    {
+        problemLoading("'fonts/Marker Felt.ttf'");
+    }
+    else
+    {
+        // position the label on the center of the screen
+        status_label_Red->setColor(Color3B::BLACK);
+        status_label_Red->setPosition(Vec2(356, 761));
+
+        // add the label as a child to this layer
+        this->addChild(status_label_Red, 34);
+        status_label_Red->setVisible(false);
+    }
+
+    status_label_Green = Label::createWithTTF("Green's Status", "fonts/Marker Felt.ttf", 35);
+    if (status_label_Green == nullptr)
+    {
+        problemLoading("'fonts/Marker Felt.ttf'");
+    }
+    else
+    {
+        // position the label on the center of the screen
+        status_label_Green->setColor(Color3B::BLACK);
+        status_label_Green->setPosition(Vec2(788, 761));
+        status_label_Green->setVisible(false);
+
+        // add the label as a child to this layer
+        this->addChild(status_label_Green, 34);
+    }
+
+    status_label_Yellow = Label::createWithTTF("Yellow's Status", "fonts/Marker Felt.ttf", 35);
+    if (status_label_Yellow == nullptr)
+    {
+        problemLoading("'fonts/Marker Felt.ttf'");
+    }
+    else
+    {
+        // position the label on the center of the screen
+        status_label_Yellow->setColor(Color3B::BLACK);
+        status_label_Yellow->setPosition(Vec2(788, 337));
+        status_label_Yellow->setVisible(false);
+
+        // add the label as a child to this layer
+        this->addChild(status_label_Yellow, 34);
+    }
+
+    numPlayersFinishedGame = 0;
+
     //BGM
     playBGM();
 
@@ -321,12 +391,13 @@ void MainMenu::onMouseMove(cocos2d::EventMouse* event, Player* player)
 
     //log("X: %f, Y: %f",event->getCursorX(), event->getCursorY());
     //player->getButton(1)->setPosition(Vec2(event->getCursorX(), event->getCursorY()));
+    //player->getButton(1)->setPosition(Vec2(event->getCursorX(), event->getCursorY()));
     //player->move(player->getButton(1), 25);
 }
 
 void MainMenu::update(float dt)
 {
-    if (!bluePlayer->isWinner() && !redPlayer->isWinner() && !greenPlayer->isWinner() && !yellowPlayer->isWinner())
+    if (!bluePlayer->hasCompletedGame() && !redPlayer->hasCompletedGame() && !greenPlayer->hasCompletedGame() && !yellowPlayer->hasCompletedGame())
     {
         if (bluePlayer == currentlyPlaying && !hasMadePlayerPlay)
         {
@@ -334,6 +405,118 @@ void MainMenu::update(float dt)
             makePlayerPlay(bluePlayer);
         }
     }
+    else
+    {
+        if (numPlayersFinishedGame == 0)
+        {
+
+            if (bluePlayer->hasCompletedGame())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Blue, "1st Place");
+                numPlayersFinishedGame = 1;
+            }
+            else if (redPlayer->hasCompletedGame())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Red, "1st Place");
+                numPlayersFinishedGame = 1;
+            }
+            else if (greenPlayer->hasCompletedGame())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Green, "1st Place");
+                numPlayersFinishedGame = 1;
+            }
+            else if (yellowPlayer->hasCompletedGame())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Yellow, "1st Place");
+                numPlayersFinishedGame = 1;
+            }
+
+            
+        }
+        else if (numPlayersFinishedGame == 1)
+        {
+
+            if (bluePlayer->hasCompletedGame() && !status_label_Blue->isVisible())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Blue, "2nd Place");
+                numPlayersFinishedGame = 2;
+            }
+            else if (redPlayer->hasCompletedGame() && !status_label_Red->isVisible())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Red, "2nd Place");
+                numPlayersFinishedGame = 2;
+            }
+            else if (greenPlayer->hasCompletedGame() && !status_label_Green->isVisible())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Green, "2nd Place");
+                numPlayersFinishedGame = 2;
+            }
+            else if (yellowPlayer->hasCompletedGame() && !status_label_Yellow->isVisible())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Yellow, "2nd Place");
+                numPlayersFinishedGame = 2;
+            }
+
+        }
+        else if (numPlayersFinishedGame == 2)
+        {
+
+            if (bluePlayer->hasCompletedGame() && !status_label_Blue->isVisible())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Blue, "3rd Place");
+                numPlayersFinishedGame = 3;
+            }
+            else if (redPlayer->hasCompletedGame() && !status_label_Red->isVisible())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Red, "3rd Place");
+                numPlayersFinishedGame = 3;
+            }
+            else if (greenPlayer->hasCompletedGame() && !status_label_Green->isVisible())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Green, "3rd Place");
+                numPlayersFinishedGame = 3;
+            }
+            else if (yellowPlayer->hasCompletedGame() && !status_label_Yellow->isVisible())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Yellow, "3rd Place");
+                numPlayersFinishedGame = 3;
+            }
+
+        }
+        else
+        {
+
+            if (bluePlayer->hasCompletedGame() && !status_label_Blue->isVisible())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Blue, "4th Place");
+                numPlayersFinishedGame = 4;
+            }
+            else if (redPlayer->hasCompletedGame() && !status_label_Red->isVisible())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Red, "4th Place");
+                numPlayersFinishedGame = 4;
+            }
+            else if (greenPlayer->hasCompletedGame() && !status_label_Green->isVisible())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Green, "4th Place");
+                numPlayersFinishedGame = 4;
+            }
+            else if (yellowPlayer->hasCompletedGame() && !status_label_Yellow->isVisible())
+            {
+                DeclareStatusOfPlayerAfterCompletion(status_label_Yellow, "4th Place");
+                numPlayersFinishedGame = 4;
+            }
+
+            hidePlayerButton();
+
+        }
+    }
+}
+
+void MainMenu::DeclareStatusOfPlayerAfterCompletion(cocos2d::Label* _label, const std::string _string)
+{
+    _label->setString(_string);
+    _label->setVisible(true);
 }
 
 void MainMenu::hidePlayerButton()
@@ -360,11 +543,16 @@ void MainMenu::playRollDiceAnim()
 
 void MainMenu::makePlayerPlay(Player* _player)
 {
-    playerButton->setTouchEnabled(true);
+    if (isPlaying)
+        playerButton->setTouchEnabled(true);
     playerButton->setVisible(true);
     playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, _player));
     maintainZorderOfCurrentPlayer(_player);
     hasMadePlayerPlay = true;
+
+    auto actionBlink = Blink::create(1.0, 1);
+    auto _seq = RepeatForever::create(Sequence::create(FadeOut::create(0.2f), FadeIn::create(0.2f), NULL));
+    playerButton->runAction(_seq->clone());
 }
 
 void MainMenu::passPlayerTurn()
@@ -374,7 +562,8 @@ void MainMenu::passPlayerTurn()
         log("passed to redPlayer");
         playerButton->setPosition(Vec2(playerButton->getPosition().x, 644));
         playerButton->setVisible(true);
-        playerButton->setTouchEnabled(true);
+        if (isPlaying)
+            playerButton->setTouchEnabled(true);
         playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, redPlayer));
         maintainZorderOfCurrentPlayer(redPlayer);
         currentlyPlaying = redPlayer;
@@ -385,7 +574,8 @@ void MainMenu::passPlayerTurn()
         log("passed to greenPlayer");
         playerButton->setPosition(Vec2(1015, playerButton->getPosition().y));
         playerButton->setVisible(true);
-        playerButton->setTouchEnabled(true);
+        if (isPlaying)
+            playerButton->setTouchEnabled(true);
         playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, greenPlayer));
         maintainZorderOfCurrentPlayer(greenPlayer);
         currentlyPlaying = greenPlayer;
@@ -396,7 +586,8 @@ void MainMenu::passPlayerTurn()
         log("passed to yellowPlayer");
         playerButton->setPosition(Vec2(playerButton->getPosition().x, 221));
         playerButton->setVisible(true);
-        playerButton->setTouchEnabled(true);
+        if (isPlaying)
+            playerButton->setTouchEnabled(true);
         playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, yellowPlayer));
         maintainZorderOfCurrentPlayer(yellowPlayer);
         currentlyPlaying = yellowPlayer;
@@ -407,7 +598,8 @@ void MainMenu::passPlayerTurn()
         log("passed to bluePlayer");
         playerButton->setPosition(Vec2(140, playerButton->getPosition().y));
         playerButton->setVisible(true);
-        playerButton->setTouchEnabled(true);
+        if (isPlaying)
+            playerButton->setTouchEnabled(true);
         playerButton->addTouchEventListener(CC_CALLBACK_0(Player::playTurn, bluePlayer));
         maintainZorderOfCurrentPlayer(bluePlayer);
         currentlyPlaying = bluePlayer;
@@ -432,12 +624,14 @@ void MainMenu::menuPlayCallback(Ref* pSender)
         playItem->setNormalSpriteFrame(SpriteFrame::create("ui/LOCK.png", Rect(0, 0, 63, 66)));
         this->getChildByName("mask")->setVisible(false);
         isPlaying = true;
+        playerButton->setTouchEnabled(true);
     }
     else
     {
         playItem->setNormalSpriteFrame(SpriteFrame::create("ui/PLAY.png", Rect(0, 0, 63, 66)));
         this->getChildByName("mask")->setVisible(true);
         isPlaying = false;
+        playerButton->setTouchEnabled(false);
     }
 
 }
@@ -461,7 +655,7 @@ void MainMenu::menuVolumeCallback(Ref* pSender)
 
 void MainMenu::playBGM()
 {
-    bgmID = audioInstance::play2d("sfx/bgm.mp3", true, 0.04f);
+    bgmID = audioInstance::play2d("sfx/bgm.mp3", true, 0.1f);
 }
 
 void MainMenu::stopBGM()
@@ -637,4 +831,21 @@ void MainMenu::maintainZorderOfCurrentPlayer(Player* _player)
         _ypThirdToken->setLocalZOrder(21);
         _ypFourthToken->setLocalZOrder(22);
     }
+}
+
+void MainMenu::playDiceMovementSfx()
+{
+    audioInstance::play2d("sfx/click.mp3", false, 1.0f);
+}
+void MainMenu::playDiceRollSfx()
+{
+    audioInstance::play2d("sfx/dice_roll.mp3", false, 1.0f);
+}
+void MainMenu::playTokenElinationSfx()
+{
+    audioInstance::play2d("sfx/token_elimination.mp3", false, 1.0f);
+}
+void MainMenu::playTokenHomeSfx()
+{
+    audioInstance::play2d("sfx/token_home.mp3", false, 1.0f);
 }
