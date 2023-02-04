@@ -53,6 +53,8 @@ private:
     static void passTurnToGreenPlayer();
     static void passTurnToYellowPlayer();
 
+    void setupAndAddToken(Token* _token, Vec2 _pos, int _zOrder, std::string _name);
+
 public:
     static cocos2d::Scene* createScene();
 

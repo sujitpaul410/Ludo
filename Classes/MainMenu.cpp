@@ -136,7 +136,7 @@ bool MainMenu::init()
     yellowPlayer = new Player("ui/Tokens/Yellow_Token1.png", "YELLOW");
     if (bluePlayer == nullptr || redPlayer == nullptr || greenPlayer == nullptr || yellowPlayer == nullptr)
     {
-        log("bluePlayer is NULL");
+        log("Player is NULL");
     }
 
     //blue player's tokens
@@ -150,30 +150,10 @@ bool MainMenu::init()
     }
     else
     {
-        bpFirstToken->getButton()->ignoreContentAdaptWithSize(false);
-        bpFirstToken->getButton()->setContentSize(Size(45, 45));
-        bpFirstToken->getButton()->setPosition(Vec2(321, 258));
-        //bpFirstToken->setTitleText("Button1");
-        bpFirstToken->getButton()->setTouchEnabled(false);
-        this->addChild(bpFirstToken->getButton(), 7, "bluePlayerFirstToken");
-
-        bpSecondToken->getButton()->ignoreContentAdaptWithSize(false);
-        bpSecondToken->getButton()->setContentSize(Size(45, 45));
-        bpSecondToken->getButton()->setPosition(Vec2(321, 181));
-        bpSecondToken->getButton()->setTouchEnabled(false);
-        this->addChild(bpSecondToken->getButton(), 8, "bluePlayerSecondToken");
-
-        bpThirdToken->getButton()->ignoreContentAdaptWithSize(false);
-        bpThirdToken->getButton()->setContentSize(Size(45, 45));
-        bpThirdToken->getButton()->setPosition(Vec2(405, 258));
-        bpThirdToken->getButton()->setTouchEnabled(false);
-        this->addChild(bpThirdToken->getButton(), 9, "bluePlayerThirdToken");
-
-        bpFourthToken->getButton()->ignoreContentAdaptWithSize(false);
-        bpFourthToken->getButton()->setContentSize(Size(45, 45));
-        bpFourthToken->getButton()->setPosition(Vec2(405, 181));
-        bpFourthToken->getButton()->setTouchEnabled(false);
-        this->addChild(bpFourthToken->getButton(), 10, "bluePlayerFourthToken");
+        setupAndAddToken(bpFirstToken, Vec2(321, 258), 7, "bluePlayerFirstToken");
+        setupAndAddToken(bpSecondToken, Vec2(321, 181), 8, "bluePlayerSecondToken");
+        setupAndAddToken(bpThirdToken, Vec2(405, 258), 9, "bluePlayerThirdToken");
+        setupAndAddToken(bpFourthToken, Vec2(405, 181), 10, "bluePlayerFourthToken");
     }
 
     //red player's tokens
@@ -187,30 +167,10 @@ bool MainMenu::init()
     }
     else
     {
-        rpFirstToken->getButton()->ignoreContentAdaptWithSize(false);
-        rpFirstToken->getButton()->setContentSize(Size(45, 45));
-        rpFirstToken->getButton()->setPosition(Vec2(322, 683));
-        //bpFirstToken->setTitleText("Button1");
-        rpFirstToken->getButton()->setTouchEnabled(false);
-        this->addChild(rpFirstToken->getButton(), 11, "redPlayerFirstToken");
-
-        rpSecondToken->getButton()->ignoreContentAdaptWithSize(false);
-        rpSecondToken->getButton()->setContentSize(Size(45, 45));
-        rpSecondToken->getButton()->setPosition(Vec2(322, 606));
-        rpSecondToken->getButton()->setTouchEnabled(false);
-        this->addChild(rpSecondToken->getButton(), 12, "redPlayerSecondToken");
-
-        rpThirdToken->getButton()->ignoreContentAdaptWithSize(false);
-        rpThirdToken->getButton()->setContentSize(Size(45, 45));
-        rpThirdToken->getButton()->setPosition(Vec2(406, 683));
-        rpThirdToken->getButton()->setTouchEnabled(false);
-        this->addChild(rpThirdToken->getButton(), 13, "redPlayerThirdToken");
-
-        rpFourthToken->getButton()->ignoreContentAdaptWithSize(false);
-        rpFourthToken->getButton()->setContentSize(Size(45, 45));
-        rpFourthToken->getButton()->setPosition(Vec2(406, 606));
-        rpFourthToken->getButton()->setTouchEnabled(false);
-        this->addChild(rpFourthToken->getButton(), 14, "redPlayerFourthToken");
+        setupAndAddToken(rpFirstToken, Vec2(322, 683), 11, "redPlayerFirstToken");
+        setupAndAddToken(rpSecondToken, Vec2(322, 606), 12, "redPlayerSecondToken");
+        setupAndAddToken(rpThirdToken, Vec2(406, 683), 13, "redPlayerThirdToken");
+        setupAndAddToken(rpFourthToken, Vec2(406, 606), 14, "redPlayerFourthToken");
     }
 
     //green player's tokens
@@ -224,30 +184,10 @@ bool MainMenu::init()
     }
     else
     {
-        gpFirstToken->getButton()->ignoreContentAdaptWithSize(false);
-        gpFirstToken->getButton()->setContentSize(Size(45, 45));
-        gpFirstToken->getButton()->setPosition(Vec2(747, 683));
-        //bpFirstToken->setTitleText("Button1");
-        gpFirstToken->getButton()->setTouchEnabled(false);
-        this->addChild(gpFirstToken->getButton(), 15, "greenPlayerFirstToken");
-
-        gpSecondToken->getButton()->ignoreContentAdaptWithSize(false);
-        gpSecondToken->getButton()->setContentSize(Size(45, 45));
-        gpSecondToken->getButton()->setPosition(Vec2(747, 606));
-        gpSecondToken->getButton()->setTouchEnabled(false);
-        this->addChild(gpSecondToken->getButton(), 16, "greenPlayerSecondToken");
-
-        gpThirdToken->getButton()->ignoreContentAdaptWithSize(false);
-        gpThirdToken->getButton()->setContentSize(Size(45, 45));
-        gpThirdToken->getButton()->setPosition(Vec2(831, 683));
-        gpThirdToken->getButton()->setTouchEnabled(false);
-        this->addChild(gpThirdToken->getButton(), 17, "greenPlayerThirdToken");
-
-        gpFourthToken->getButton()->ignoreContentAdaptWithSize(false);
-        gpFourthToken->getButton()->setContentSize(Size(45, 45));
-        gpFourthToken->getButton()->setPosition(Vec2(831, 606));
-        gpFourthToken->getButton()->setTouchEnabled(false);
-        this->addChild(gpFourthToken->getButton(), 18, "greenPlayerFourthToken");
+        setupAndAddToken(gpFirstToken, Vec2(747, 683), 15, "greenPlayerFirstToken");
+        setupAndAddToken(gpSecondToken, Vec2(747, 606), 16, "greenPlayerSecondToken");
+        setupAndAddToken(gpThirdToken, Vec2(831, 683), 17, "greenPlayerThirdToken");
+        setupAndAddToken(gpFourthToken, Vec2(831, 606), 18, "greenPlayerFourthToken");
     }
 
     //yellow player's tokens
@@ -261,30 +201,10 @@ bool MainMenu::init()
     }
     else
     {
-        ypFirstToken->getButton()->ignoreContentAdaptWithSize(false);
-        ypFirstToken->getButton()->setContentSize(Size(45, 45));
-        ypFirstToken->getButton()->setPosition(Vec2(747, 258));
-        //bpFirstToken->setTitleText("Button1");
-        ypFirstToken->getButton()->setTouchEnabled(false);
-        this->addChild(ypFirstToken->getButton(), 19, "yellowPlayerFirstToken");
-
-        ypSecondToken->getButton()->ignoreContentAdaptWithSize(false);
-        ypSecondToken->getButton()->setContentSize(Size(45, 45));
-        ypSecondToken->getButton()->setPosition(Vec2(747, 181));
-        ypSecondToken->getButton()->setTouchEnabled(false);
-        this->addChild(ypSecondToken->getButton(), 20, "yellowPlayerSecondToken");
-
-        ypThirdToken->getButton()->ignoreContentAdaptWithSize(false);
-        ypThirdToken->getButton()->setContentSize(Size(45, 45));
-        ypThirdToken->getButton()->setPosition(Vec2(831, 258));
-        ypThirdToken->getButton()->setTouchEnabled(false);
-        this->addChild(ypThirdToken->getButton(), 21, "yellowPlayerThirdToken");
-
-        ypFourthToken->getButton()->ignoreContentAdaptWithSize(false);
-        ypFourthToken->getButton()->setContentSize(Size(45, 45));
-        ypFourthToken->getButton()->setPosition(Vec2(831, 181));
-        ypFourthToken->getButton()->setTouchEnabled(false);
-        this->addChild(ypFourthToken->getButton(), 22, "yellowPlayerFourthToken");
+        setupAndAddToken(ypFirstToken, Vec2(747, 258), 19, "yellowPlayerFirstToken");
+        setupAndAddToken(ypSecondToken, Vec2(747, 181), 20, "yellowPlayerSecondToken");
+        setupAndAddToken(ypThirdToken, Vec2(831, 258), 21, "yellowPlayerThirdToken");
+        setupAndAddToken(ypFourthToken, Vec2(831, 181), 22, "yellowPlayerFourthToken");
     }
 
     currentlyPlaying = bluePlayer;
@@ -405,6 +325,16 @@ bool MainMenu::init()
     //player->getButton(1)->setPosition(Vec2(event->getCursorX(), event->getCursorY()));
     //player->move(player->getButton(1), 25);
 }*/
+
+void MainMenu::setupAndAddToken(Token* _token, Vec2 _pos, int _zOrder, std::string _name)
+{
+    _token->getButton()->ignoreContentAdaptWithSize(false);
+    _token->getButton()->setContentSize(Size(45, 45));
+    _token->getButton()->setPosition(_pos);
+    //_token->setTitleText("Button1");
+    _token->getButton()->setTouchEnabled(false);
+    this->addChild(_token->getButton(), _zOrder, _name);
+}
 
 void MainMenu::update(float dt)
 {
